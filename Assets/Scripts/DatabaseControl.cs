@@ -1,60 +1,54 @@
-using System;
-using System.IO;
 using SQLite;
 using TMPro;
+using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DatabaseControl : MonoBehaviour
 {
+	public static DatabaseControl Instance;
+	
+	public event Action<Contact[]> OnContactsUpdated;
+	
 	[SerializeField] private string databaseName;
 
-	[Header("Add contact")] 
-	[SerializeField] private TMP_InputField nameField;
-	[SerializeField] private TMP_InputField surnameField;
-	[SerializeField] private TMP_InputField phoneField;
-	
-	[Header("Get contact")] 
-	[SerializeField] private TMP_InputField idField;
-	
-	private SQLiteConnection db;
+	private SQLiteConnection _db;
 	
 	private void Awake()
 	{
+		if (Instance == null) Instance = this;
+		else Destroy(this);
+		
 		SetupDatabase();
+	}
+
+	private void Start()
+	{
+		UpdateContacts(this, null);
 	}
 
 	private void SetupDatabase()
 	{
 		var databasePath = Application.dataPath + '/' + databaseName;
-		Debug.Log(databasePath);
-		
-		db = new SQLiteConnection(databasePath);
 
-		db.CreateTable<Contact>();
+		_db = new SQLiteConnection(databasePath);
+		_db.CreateTable<Contact>();
+		_db.TableChanged += UpdateContacts;
 	}
 
-	public void AddContact()
-	{
-		AddContact(db, nameField.text, surnameField.text, phoneField.text);
-	}
-
-	public void GetContact()
-	{
-		var contacts = GetContact(db, int.Parse(idField.text));
-		
-		Debug.Log(contacts[0].Name);
-	}
-
-	private Contact[] GetContact(SQLiteConnection c, int id)
+	public void FindContactsByName(string name)
     {
-    	var q = from f in c.Table<Contact>()
-    				where f.Id == id
-    				select f;
-    	return q.ToArray();
+	    var contacts = _db.Query<Contact> ("select * from Contact where Name like '" + name + "%'");
+    	
+        OnContactsUpdated?.Invoke(contacts.ToArray());
     }
+
+	private Contact[] GetAllContacts()
+	{
+		var contacts = _db.Query<Contact> ("select * from Contact");
+		return contacts.ToArray();
+	}
     
-	private void AddContact(SQLiteConnection c, string name, string surname, string phone)
+	public void AddContact(string name, string surname, string phone)
     {
 	    var fav = new Contact() 
 	    {
@@ -62,6 +56,13 @@ public class DatabaseControl : MonoBehaviour
 		    Surname = surname,
 		    Phone = phone
 	    };
-	    c.Insert(fav);
+	    
+	    _db.Insert(fav);
     }
+
+	private void UpdateContacts(object sender, NotifyTableChangedEventArgs e)
+	{
+		var contacts = GetAllContacts();
+		OnContactsUpdated?.Invoke(contacts);
+	}
 }
