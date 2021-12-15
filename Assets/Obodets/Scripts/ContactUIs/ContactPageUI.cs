@@ -1,10 +1,9 @@
-﻿using Obodets.Scripts.Animations;
-using Obodets.Scripts.ContactHandlers;
+﻿using Obodets.Scripts.ContactHandlers;
 using Obodets.Scripts.Databases;
 using TMPro;
 using UnityEngine;
 
-namespace Obodets.Scripts
+namespace Obodets.Scripts.ContactUIs
 {
     public class ContactPageUI : MonoBehaviour
     {

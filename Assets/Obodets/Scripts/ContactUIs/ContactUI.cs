@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace Obodets.Scripts
+namespace Obodets.Scripts.ContactUIs
 {
     public class ContactUI : MonoBehaviour
     {

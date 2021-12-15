@@ -1,4 +1,5 @@
 ﻿using Obodets.Scripts.Animations;
+using Obodets.Scripts.Databases;
 using TMPro;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ namespace Obodets.Scripts.ContactHandlers
         
         private Vector3 _startPosition;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             SetupFields();
 
@@ -52,14 +53,45 @@ namespace Obodets.Scripts.ContactHandlers
             errorText.text = default;
         }
 
-        public void CloseMenu()
+        public virtual void CloseMenu()
         {
+            ClearFields();
             transform.Hide(HideTime);
         }
 
         public void ShowMenu()
         {
             transform.FloatingTo(_startPosition.x);
+        }
+
+        protected void MakeInteractable(bool isInteractable)
+        {
+            nameField.interactable = isInteractable;
+            surnameField.interactable = isInteractable;
+            phoneField.interactable = isInteractable;
+        }
+
+        protected Contact CreateContact()
+        {
+            if (FillErrorHandler.NameErrorChecking(nameField.text, nameErrorText)) return null;
+            if (FillErrorHandler.NameErrorChecking(surnameField.text, surnameErrorText)) return null;
+            if (FillErrorHandler.PhoneErrorChecking(phoneField.text, phoneErrorText)) return null;
+            
+            var contact = new Contact() 
+            {
+                Name = nameField.text,
+                Surname = surnameField.text,
+                Phone = phoneField.text
+            };
+
+            return contact;
+        }
+
+        private void ClearFields()
+        {
+            nameField.text = default;
+            surnameField.text = default;
+            phoneField.text = default;
         }
     }
 }

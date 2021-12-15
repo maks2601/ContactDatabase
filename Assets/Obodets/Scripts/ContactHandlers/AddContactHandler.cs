@@ -4,13 +4,19 @@ namespace Obodets.Scripts.ContactHandlers
 {
     public sealed class AddContactHandler : ContactHandler
     {
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            MakeInteractable(true);
+        }
+        
         public void AddContact()
         {
-            if (FillErrorHandler.NameErrorChecking(nameField.text, nameErrorText)) return;
-            if (FillErrorHandler.NameErrorChecking(surnameField.text, surnameErrorText)) return;
-            if (FillErrorHandler.PhoneErrorChecking(phoneField.text, phoneErrorText)) return;
+            var contact = CreateContact();
+            if(contact == null) return;
         
-            DatabaseControl.Instance.AddContact(nameField.text, surnameField.text, phoneField.text);
+            DatabaseControl.Instance.AddContact(contact);
         
             CloseMenu();
         }

@@ -7,9 +7,9 @@ namespace Obodets.Scripts
     {
         public static bool NameErrorChecking(string text, TMP_Text errorTextHolder)
         {
-            if (text.Length < 4)
+            if (text.Length < 3)
             {
-                errorTextHolder.text = "At least 4 characters";
+                errorTextHolder.text = "At least 3 characters";
                 return true;
             }
 

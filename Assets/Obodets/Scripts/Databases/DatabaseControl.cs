@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using SQLite;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace Obodets.Scripts.Databases
 		[SerializeField] private string databaseName;
 
 		private SQLiteConnection _db;
-	
+
 		private void Awake()
 		{
 			if (Instance == null) Instance = this;
@@ -31,7 +32,15 @@ namespace Obodets.Scripts.Databases
 		private void SetupDatabase()
 		{
 			var databasePath = Application.dataPath + '/' + databaseName;
-
+#if UNITY_ANRDOID
+			var openPath = "jar:file://" + Application.dataPath + "!/assets/" + databaseName;
+			var www = new WWW(openPath);
+			while(!www.isDone) {}
+			File.WriteAllBytes(databasePath, www.bytes);
+#else
+			var openPath = Application.dataPath + "/StreamingAssets/" + databaseName;
+			File.Copy(openPath, databasePath);
+#endif
 			_db = new SQLiteConnection(databasePath);
 			_db.CreateTable<Contact>();
 			_db.TableChanged += UpdateContacts;
@@ -62,23 +71,17 @@ namespace Obodets.Scripts.Databases
 			return contacts.ToArray();
 		}
     
-		public void AddContact(string name, string surname, string phone)
-		{
-			var fav = new Contact() 
-			{
-				Name = name,
-				Surname = surname,
-				Phone = phone
-			};
-	    
-			_db.Insert(fav);
-		}
+		public void AddContact(Contact contact) => _db.Insert(contact);
 
 		public Contact GetContactById(int id)
 		{
 			var contacts = _db.Query<Contact> ("select * from Contact where Id=" + id);
 			return contacts[0];
 		}
+
+		public void DeleteContactById(int id) => _db.Delete(id, new TableMapping(typeof(Contact)));
+
+		public void UpdateContact(Contact contact) => _db.Update(contact);
 
 		private void UpdateContacts(object sender, NotifyTableChangedEventArgs e)
 		{

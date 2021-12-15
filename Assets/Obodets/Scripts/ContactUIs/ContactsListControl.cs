@@ -2,7 +2,7 @@ using Obodets.Scripts.ContactHandlers;
 using Obodets.Scripts.Databases;
 using UnityEngine;
 
-namespace Obodets.Scripts
+namespace Obodets.Scripts.ContactUIs
 {
     public class ContactsListControl : MonoBehaviour
     {
