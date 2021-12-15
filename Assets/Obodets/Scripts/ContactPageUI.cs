@@ -1,4 +1,5 @@
 ﻿using Obodets.Scripts.Animations;
+using Obodets.Scripts.ContactHandlers;
 using Obodets.Scripts.Databases;
 using TMPro;
 using UnityEngine;
@@ -17,8 +18,6 @@ namespace Obodets.Scripts
             {
                 DatabaseControl.Instance.ContactSearchRequest(searchField.text);
             });
-        
-            addContactMenu.transform.Hide(0);
         }
 
         public void OpenAddContactMenu()

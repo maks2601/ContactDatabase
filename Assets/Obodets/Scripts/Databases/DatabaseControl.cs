@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Obodets.Scripts.Databases
 {
-	public class DatabaseControl : MonoBehaviour
+	public sealed class DatabaseControl : MonoBehaviour
 	{
 		public static DatabaseControl Instance;
 	
@@ -72,6 +72,12 @@ namespace Obodets.Scripts.Databases
 			};
 	    
 			_db.Insert(fav);
+		}
+
+		public Contact GetContactById(int id)
+		{
+			var contacts = _db.Query<Contact> ("select * from Contact where Id=" + id);
+			return contacts[0];
 		}
 
 		private void UpdateContacts(object sender, NotifyTableChangedEventArgs e)

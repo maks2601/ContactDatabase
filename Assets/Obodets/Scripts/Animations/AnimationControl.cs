@@ -10,9 +10,9 @@ namespace Obodets.Scripts.Animations
             element.DOMoveX(element.position.x + Screen.width, time);
         }
 
-        public static void FloatingTo(this Transform element, float positionX)
+        public static void FloatingTo(this Transform element, float positionX, float time = 0.6f)
         {
-            element.DOMoveX(positionX, 0.5f);
+            element.DOMoveX(positionX, time);
         }
     }
 }

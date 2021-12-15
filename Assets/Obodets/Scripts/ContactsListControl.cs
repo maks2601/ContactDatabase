@@ -1,3 +1,4 @@
+using Obodets.Scripts.ContactHandlers;
 using Obodets.Scripts.Databases;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ namespace Obodets.Scripts
     
         [SerializeField] private ContactUI contactPrefab;
 
+        [SerializeField] private EditContactHandler editContactHandler;
+        
         private const int ElementSize = 200;
 
         private void Start()
@@ -28,7 +31,11 @@ namespace Obodets.Scripts
             foreach (var contact in contacts)
             {
                 var contactUI = Instantiate(contactPrefab, content);
-                contactUI.Initialize(contact.Name, contact.Surname);
+                contactUI.Initialize(contact.Name, contact.Surname, delegate
+                {
+                    editContactHandler.ContactId = contact.Id;
+                    editContactHandler.ShowMenu();
+                });
             }
         }
 

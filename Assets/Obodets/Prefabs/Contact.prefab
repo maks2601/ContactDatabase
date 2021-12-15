@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 663dd1061d400f146802493f5905e98f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  contactButton: {fileID: 4332315535693505210}
   nameText: {fileID: 4332315535829872957}
 --- !u!222 &4332315535693505212
 CanvasRenderer:

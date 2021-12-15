@@ -1,21 +1,22 @@
-using Obodets.Scripts.Animations;
-using Obodets.Scripts.Databases;
+﻿using Obodets.Scripts.Animations;
 using TMPro;
 using UnityEngine;
 
-namespace Obodets.Scripts
+namespace Obodets.Scripts.ContactHandlers
 {
-    public class AddContactHandler : MonoBehaviour
+    public class ContactHandler : MonoBehaviour
     {
-        [SerializeField] private TMP_InputField nameField;
-        [SerializeField] private TextMeshProUGUI nameErrorText;
+        [SerializeField] protected TMP_InputField nameField;
+        [SerializeField] protected TextMeshProUGUI nameErrorText;
     
-        [SerializeField] private TMP_InputField surnameField;
-        [SerializeField] private TextMeshProUGUI surnameErrorText;
+        [SerializeField] protected TMP_InputField surnameField;
+        [SerializeField] protected TextMeshProUGUI surnameErrorText;
     
-        [SerializeField] private TMP_InputField phoneField;
-        [SerializeField] private TextMeshProUGUI phoneErrorText;
+        [SerializeField] protected TMP_InputField phoneField;
+        [SerializeField] protected TextMeshProUGUI phoneErrorText;
 
+        private const float HideTime = 0.4f;
+        
         private Vector3 _startPosition;
 
         private void Awake()
@@ -23,6 +24,8 @@ namespace Obodets.Scripts
             SetupFields();
 
             _startPosition = transform.position;
+            
+            transform.Hide(0);
         }
 
         private void SetupFields()
@@ -44,17 +47,6 @@ namespace Obodets.Scripts
             HideError(phoneErrorText);
         }
 
-        public void AddContact()
-        {
-            if (FillErrorHandler.NameErrorChecking(nameField.text, nameErrorText)) return;
-            if (FillErrorHandler.NameErrorChecking(surnameField.text, surnameErrorText)) return;
-            if (FillErrorHandler.PhoneErrorChecking(phoneField.text, phoneErrorText)) return;
-        
-            DatabaseControl.Instance.AddContact(nameField.text, surnameField.text, phoneField.text);
-        
-            CloseMenu();
-        }
-
         private void HideError(TextMeshProUGUI errorText)
         {
             errorText.text = default;
@@ -62,7 +54,7 @@ namespace Obodets.Scripts
 
         public void CloseMenu()
         {
-            transform.Hide(0.25f);
+            transform.Hide(HideTime);
         }
 
         public void ShowMenu()
