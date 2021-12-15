@@ -1,6 +1,6 @@
 using SQLite;
-using TMPro;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DatabaseControl : MonoBehaviour
@@ -35,13 +35,25 @@ public class DatabaseControl : MonoBehaviour
 		_db.TableChanged += UpdateContacts;
 	}
 
-	public void FindContactsByName(string name)
-    {
-	    var contacts = _db.Query<Contact> ("select * from Contact where Name like '" + name + "%'");
-    	
-        OnContactsUpdated?.Invoke(contacts.ToArray());
-    }
+	public void ContactSearchRequest(string request)
+	{
+		var requests = request.Split(' ');
+		var contacts = new List<Contact>();
 
+		if (requests.Length == 1)
+		{
+			contacts = _db.Query<Contact>("select * from Contact where Name like '" + requests[0] +
+			                              "%' union select * from Contact where Surname like '" + requests[0] + "%'");
+		}
+		else if (requests.Length == 2)
+		{
+			contacts = _db.Query<Contact>("select * from Contact where Name like '" + requests[0] +
+			                              "%' and Surname like '" + requests[1] + "%'");
+		}
+		
+		OnContactsUpdated?.Invoke(contacts.ToArray());
+	}
+	
 	private Contact[] GetAllContacts()
 	{
 		var contacts = _db.Query<Contact> ("select * from Contact");

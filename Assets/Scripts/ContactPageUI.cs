@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ContactPageUI : MonoBehaviour
 {
-    [SerializeField] private GameObject addContactMenu;
+    [SerializeField] private AddContactHandler addContactMenu;
 
     [SerializeField] private TMP_InputField searchField;
 
@@ -12,12 +12,14 @@ public class ContactPageUI : MonoBehaviour
     {
         searchField.onValueChanged.AddListener(delegate
         {
-            DatabaseControl.Instance.FindContactsByName(searchField.text);
+            DatabaseControl.Instance.ContactSearchRequest(searchField.text);
         });
+        
+        addContactMenu.transform.Hide(0);
     }
 
     public void OpenAddContactMenu()
     {
-        addContactMenu.SetActive(true);
+        addContactMenu.ShowMenu();
     }
 }
