@@ -1,0 +1,118 @@
+﻿@startuml
+class DatabaseControl 
+{
+    public static DatabaseControl Instance;
+    public event Action<Contact[]> OnContactsUpdated;
+    	
+    [SerializeField] private string databaseName;
+    
+    private SQLiteConnection _db;
+    
+    public void ContactSearchRequest(string request)
+    public void AddContact(Contact contact)
+    public void DeleteContactById(int id)
+    public void UpdateContact(Contact contact)
+    
+    private void SetupDatabase()
+    private Contact[] GetAllContacts()
+    private void UpdateContacts(object sender, NotifyTableChangedEventArgs e)
+}
+
+class Contact 
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Surname { get; set; }
+    public string Phone { get; set; }
+}
+        
+class AnimationControl
+{
+    public static void Hide(this Transform element, float time)
+    public static void FloatingTo(this Transform element, float positionX, float time = 0.6f)
+}
+
+class AddContactHandler extends ContactHandler
+{
+    AddContact()
+}
+
+class ContactHandler
+{
+    [SerializeField] protected TMP_InputField nameField;
+    [SerializeField] protected TextMeshProUGUI nameErrorText;
+        
+    [SerializeField] protected TMP_InputField surnameField;
+    [SerializeField] protected TextMeshProUGUI surnameErrorText;
+        
+    [SerializeField] protected TMP_InputField phoneField;
+    SerializeField] protected TextMeshProUGUI phoneErrorText;
+    
+    private const float HideTime = 0.4f;
+            
+    private Vector3 _startPosition;
+    
+    SetupFields()
+    HideError(TextMeshProUGUI errorText)
+    CloseMenu()
+    ShowMenu()
+    MakeInteractable(bool isInteractable)
+    CreateContact()
+    ClearFields()
+}
+
+class EditContactHandler extends ContactHandler
+{
+    [SerializeField] private GameObject submitEditing;
+        
+    private bool isEditing;
+
+    private int contactId;
+
+    public int ContactId { get; set; }
+    
+    SetFieldValues(Contact contact)
+    DeleteContact()
+    EnableEditing()
+    EnableEditing(bool active)
+    CloseMenu()
+    SubmitEditing()
+}
+
+class ContactPageUI
+{
+    [SerializeField] private AddContactHandler addContactMenu;
+    
+    [SerializeField] private TMP_InputField searchField;
+    
+    OpenAddContactMenu()
+}
+
+class ContactsListControl
+{
+    [SerializeField] private Transform content;
+    [SerializeField] private ContactUI contactPrefab;
+    [SerializeField] private EditContactHandler editContactHandler;
+    
+    private const int ElementSize = 200;
+    
+    ShowContacts(Contact[] contacts)
+    ScaleContent(int elementsCount)
+}
+
+class ContactUI
+{
+    [SerializeField] private Button contactButton;
+    [SerializeField] private TextMeshProUGUI nameText;
+    
+    ContactButtonAddListener(UnityAction listener)
+    Initialize(string name, string surname, UnityAction contactButtonListener)
+}
+
+class FillErrorHandler
+{
+    NameErrorChecking(string text, TMP_Text errorTextHolder)
+    PhoneErrorChecking(string text, TMP_Text errorTextHolder)
+}
+
+@enduml

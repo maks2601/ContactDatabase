@@ -10,4 +10,5 @@ namespace Obodets.Scripts.Databases
         public string Surname { get; set; }
         public string Phone { get; set; }
     }
+    
 }

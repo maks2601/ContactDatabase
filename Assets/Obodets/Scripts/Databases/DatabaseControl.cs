@@ -31,16 +31,8 @@ namespace Obodets.Scripts.Databases
 
 		private void SetupDatabase()
 		{
-			var databasePath = Application.dataPath + '/' + databaseName;
-#if UNITY_ANRDOID
-			var openPath = "jar:file://" + Application.dataPath + "!/assets/" + databaseName;
-			var www = new WWW(openPath);
-			while(!www.isDone) {}
-			File.WriteAllBytes(databasePath, www.bytes);
-#else
-			var openPath = Application.dataPath + "/StreamingAssets/" + databaseName;
-			File.Copy(openPath, databasePath);
-#endif
+			var databasePath = Application.dataPath + "/StreamingAssets/" + databaseName;
+
 			_db = new SQLiteConnection(databasePath);
 			_db.CreateTable<Contact>();
 			_db.TableChanged += UpdateContacts;
@@ -54,12 +46,13 @@ namespace Obodets.Scripts.Databases
 			if (requests.Length == 1)
 			{
 				contacts = _db.Query<Contact>("select * from Contact where Name like '" + requests[0] +
-				                              "%' union select * from Contact where Surname like '" + requests[0] + "%'");
+				                              "%' union select * from Contact where Surname like '" + requests[0] +
+				                              "%' order by Name");
 			}
 			else if (requests.Length == 2)
 			{
 				contacts = _db.Query<Contact>("select * from Contact where Name like '" + requests[0] +
-				                              "%' and Surname like '" + requests[1] + "%'");
+				                              "%' and Surname like '" + requests[1] + "%' order by Name");
 			}
 		
 			OnContactsUpdated?.Invoke(contacts.ToArray());
@@ -67,7 +60,7 @@ namespace Obodets.Scripts.Databases
 	
 		private Contact[] GetAllContacts()
 		{
-			var contacts = _db.Query<Contact> ("select * from Contact");
+			var contacts = _db.Query<Contact> ("select * from Contact order by Name");
 			return contacts.ToArray();
 		}
     
